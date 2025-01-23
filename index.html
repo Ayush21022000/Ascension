@@ -11,7 +11,7 @@
       }
       .form-container {
         width: 300px;
-        margin: 0 auto;
+        margin: 20px auto;
         border: 1px solid #0c0c0c;
         padding: 20px;
         border-radius: 8px;
@@ -68,18 +68,24 @@
         transform: translate(-50%, -50%);
         z-index: -1;
       }
-      .heading{
+      .heading {
         margin: 4px 0;
       }
     </style>
   </head>
   <body>
     <div class="video-container">
-      <video width="320" height="240" controls autoplay loop muted playsinline class="background-video">
-        <source
-          src="./ascensionVideo.mp4"
-          type="video/mp4"
-        />
+      <video
+        width="320"
+        height="240"
+        controls
+        autoplay
+        loop
+        muted
+        playsinline
+        class="background-video"
+      >
+        <source src="./ascensionVideo.mp4" type="video/mp4" />
       </video>
       <div class="form-container">
         <h2 class="heading">Coach Details Form</h2>
@@ -112,32 +118,40 @@
       </div>
     </div>
     <script>
-      function submitForm() {
-        // Collecting form data
-        const form = document.getElementById("userForm");
-        const formData = {
-          businessName: form.name.value,
-          emailAddress: form.email.value,
-          mobile: form.phone.value,
-          anualGrossRevenue: form.age.value,
-          websiteUrl: form.address.value,
-          preferredContactMode: "Mail",
-        };
+      async function submitForm() {
+        try {
+          const form = document.getElementById("userForm");
+          const formData = {
+            businessName: form.name.value,
+            emailAddress: form.email.value,
+            mobile: form.phone.value,
+            anualGrossRevenue: form.age.value,
+            websiteUrl: form.address.value,
+            preferredContactMode: "Mail",
+          };
 
-        // Sending data to the API
-        const response = fetch(
-          "http://54.202.4.12:8461/iam-service/api/users/",
-          {
-            method: "POST",
-            headers: {
-              "api-key": "795961c0-9454-497b-ab99-d6b854356eba",
-              "Content-Type": "application/json",
-              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjIxNjgyLCJqdGkiOiIwNmMyMjEyZGVhZWQ0MWMzOWZhNDVjYmM4YzYxZjE3YSIsIlVzZXJJZCI6MjAsImFjY291bnQiOjF9.OS6dJ4uhC7N2hKPF8UHn_K7PnDLn-dr0FI25uTCuSmk`,
-            },
-            body: JSON.stringify(formData),
+          const response = await fetch(
+            "http://54.202.4.12:8461/iam-service/api/users/",
+            {
+              method: "POST",
+              headers: {
+                "api-key": "795961c0-9454-497b-ab99-d6b854356eba",
+                "Content-Type": "application/json",
+                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3MjExLCJqdGkiOiI0Njc0OTBiZmRlMGI0M2IxYTY0MDFkNzBlNTFjODQzNCIsIlVzZXJJZCI6MTUsImFjY291bnQiOjF9.4wxWAd-vuxEDwc2gUWrCYQouscZ5azdY5ZPm-KnFcD0`,
+              },
+              body: JSON.stringify(formData),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
           }
-        );
-        form.reset();
+
+          const result = await response.json();
+          console.log("Form submitted successfully", result);
+        } catch (error) {
+          console.error("Form submission error:", error);
+        }
       }
     </script>
   </body>
