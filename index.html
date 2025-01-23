@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dummy Form</title>
+    <title>Ascension Coach Enrollment Form</title>
+    <link rel="icon" type="image/x-icon" href="./ascension-logo.svg" />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -128,16 +129,17 @@
             anualGrossRevenue: form.age.value,
             websiteUrl: form.address.value,
             preferredContactMode: "Mail",
+            groups: [2]
           };
 
           const response = await fetch(
-            "http://54.202.4.12:8461/iam-service/api/users/",
+            " https://cors-anywhere.herokuapp.com/http://54.202.4.12:8461/iam-service/api/users/",
             {
               method: "POST",
               headers: {
                 "api-key": "795961c0-9454-497b-ab99-d6b854356eba",
                 "Content-Type": "application/json",
-                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3MjExLCJqdGkiOiI0Njc0OTBiZmRlMGI0M2IxYTY0MDFkNzBlNTFjODQzNCIsIlVzZXJJZCI6MTUsImFjY291bnQiOjF9.4wxWAd-vuxEDwc2gUWrCYQouscZ5azdY5ZPm-KnFcD0`,
+                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjQ0OTAzLCJqdGkiOiIwMzM0YWQwMWRlMzE0YzZkYThmNGMyZDAxMjJjMTU0YSIsIlVzZXJJZCI6MTUsImFjY291bnQiOjF9.dwsqKxobbq8zcEuBr741Noz3WhCf4dZtTePAwWKlZww`,
               },
               body: JSON.stringify(formData),
             }
@@ -148,10 +150,13 @@
           }
 
           const result = await response.json();
-          console.log("Form submitted successfully", result);
+          alert("Form submitted successfully, Please check your email and continue to your dashboard");
+          form.reset();
         } catch (error) {
-          console.error("Form submission error:", error);
+          console.error("Form submission error: Please check for potential validations", error);
         }
+
+        form
       }
     </script>
   </body>
