@@ -151,13 +151,13 @@
           };
 
           const response = await fetch(
-            " https://cors-anywhere.herokuapp.com/http://54.202.4.12:8461/iam-service/api/users/",
+            "https://qa.ascensionintelligence.com:8461/iam-service/api/users/",
             {
               method: "POST",
               headers: {
                 "api-key": "795961c0-9454-497b-ab99-d6b854356eba",
                 "Content-Type": "application/json",
-                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjQ0OTAzLCJqdGkiOiIwMzM0YWQwMWRlMzE0YzZkYThmNGMyZDAxMjJjMTU0YSIsIlVzZXJJZCI6MTUsImFjY291bnQiOjF9.dwsqKxobbq8zcEuBr741Noz3WhCf4dZtTePAwWKlZww`,
+                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MTM4MTQwLCJqdGkiOiIzZGNiMThkNjYwYjc0ZTMzYjc1NjljYWEwZmNjMWIzMCIsIlVzZXJJZCI6ODksImFjY291bnQiOjF9.YhoJ3rMjxhNr1iF2BW8xfopAyfJW8HRkqSrBXk7EAO0`,
               },
               body: JSON.stringify(formData),
             }
