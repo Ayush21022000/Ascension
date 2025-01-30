@@ -23,6 +23,8 @@
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        max-height: 90vh;
+        overflow-y: scroll;
       }
       .form-container h2 {
         text-align: center;
@@ -37,7 +39,7 @@
       }
       .form-container input,
       .form-container select {
-        width: 100%;
+        width: 90%;
         padding: 10px;
         margin-bottom: 15px;
         border: 1px solid #ddd;
@@ -112,6 +114,9 @@
           <label for="name">Business Name <em class="star-field">*</em></label>
           <input type="text" id="name" name="name" required />
 
+          <label for="name">Full Name <em class="star-field">*</em></label>
+          <input type="text" id="fullName" name="fullName" required />
+
           <label for="email">Email Address <em class="star-field">*</em></label>
           <input type="email" id="email" name="email" required />
 
@@ -162,10 +167,17 @@
       async function submitForm() {
         const errorContainer = document.getElementById("errorContainer");
         errorContainer.innerText = ""; // Clear previous errors
+    
         try {
+          const token = await refreshFormToken(); // Ensure we have a valid token before proceeding
+          if (!token) {
+            throw new Error("Failed to obtain authentication token.");
+          }
+    
           const form = document.getElementById("userForm");
           const formData = {
             businessName: form.name.value,
+            fullName: form.fullName.value,
             emailAddress: form.email.value,
             CountryCode: form.countryCode.value,
             mobile: form.phone.value,
@@ -174,7 +186,7 @@
             preferredContactMode: form.city.value,
             groups: [2],
           };
-
+    
           const response = await fetch(
             "https://qa-backend.ascensionintelligence.com/iam-service/api/users/",
             {
@@ -182,32 +194,64 @@
               headers: {
                 "api-key": "795961c0-9454-497b-ab99-d6b854356eba",
                 "Content-Type": "application/json",
-                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MTM4MTQwLCJqdGkiOiIzZGNiMThkNjYwYjc0ZTMzYjc1NjljYWEwZmNjMWIzMCIsIlVzZXJJZCI6ODksImFjY291bnQiOjF9.YhoJ3rMjxhNr1iF2BW8xfopAyfJW8HRkqSrBXk7EAO0`,
+                Authorization: `Bearer ${token}`,
               },
               body: JSON.stringify(formData),
             }
           );
-          console.log(response);
+    
           if (!response.ok) {
-            const errorData = await response.json(); // Parse the JSON response
+            const errorData = await response.json();
             const apiMessage =
               errorData?.error?.detail?.emailAddress?.[0] ||
               errorData?.message ||
               "An unknown error occurred.";
             throw new Error(apiMessage);
           }
+    
           const result = await response.json();
-          alert(
-            "Form submitted successfully! Please check your email to continue."
-          );
+          alert("Form submitted successfully! Please check your email to continue.");
           form.reset();
         } catch (error) {
-          // Handle form submission error
-
           console.error("Form submission error:", error);
           errorContainer.innerText = error.message;
         }
       }
+    
+      async function refreshFormToken() {
+        try {
+          const response = await fetch(
+            "https://qa-backend.ascensionintelligence.com/iam-service/api/authentication/authenticate/",
+            {
+              method: "POST",
+              headers: {
+                "api-key": "795961c0-9454-497b-ab99-d6b854356eba",
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify({
+                userName: "shiwanib@damcogroup.com",
+                password: "Root@12345",
+              }),
+            }
+          );
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const data = await response.json();
+          const token = data?.data?.token || "";
+    
+          sessionStorage.setItem("token", token);
+          return token; // Return the token for use in submitForm
+        } catch (error) {
+          console.error("Error refreshing form token:", error);
+          sessionStorage.setItem("token", ""); // Clear token on error
+          return null;
+        }
+      }
     </script>
+    
   </body>
 </html>
